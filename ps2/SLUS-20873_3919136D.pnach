@@ -1,0 +1,215 @@
+gametitle=Silent Hill 4: The Room (NTSC-U) [SLUS-20873]
+comment=SH4 Controls2D: Silent Hill 2/3-style "2D" controls with the original camera. Enable the patches you want in Game Properties > Patches.
+
+// https://github.com/andrewjose/sh4-2dcontrols-mod  (MIT license)
+// Built for SLUS_208.73 (ELF CRC 3919136D). Every game address patched here was checked
+// against that executable; on any other version these lines would corrupt code.
+
+[Snap turning]
+author=andrewjose (made with Claude)
+description=Henry turns straight to the stick direction instead of curving round in a wide arc. SH4 steers at 360 deg/s walking and 180 deg/s running; this makes it instant and turns his body at about 1430 deg/s.
+// turn rate: no slow-down while running (pi -> 0)
+patch=1,EE,0015B794,word,3C020000
+patch=1,EE,0015B79C,word,34420000
+// turn rate at speed (2pi -> new rate)
+patch=1,EE,0015B7A4,word,3C034974
+patch=1,EE,0015B7A8,word,34632400
+// turn rate standing (6pi -> new rate)
+patch=1,EE,0015B7AC,word,3C024974
+patch=1,EE,0015B7B0,word,34422400
+// steep cameras: use the stick direction directly (0.95 -> -1)
+patch=1,EE,0015B208,word,3C02BF80
+patch=1,EE,0015B20C,word,34420000
+// body facing speed (12 -> 25 rad/s)
+patch=1,EE,001B5A38,word,3C0241C8
+
+[Snap turning (fast, not instant)]
+author=andrewjose (made with Claude)
+description=Same as Snap turning but the walking direction turns at 1080 deg/s (90 degrees in about 3 frames). Enable this OR Snap turning, not both.
+// turn rate: no slow-down while running (pi -> 0)
+patch=1,EE,0015B794,word,3C020000
+patch=1,EE,0015B79C,word,34420000
+// turn rate at speed (2pi -> new rate)
+patch=1,EE,0015B7A4,word,3C034196
+patch=1,EE,0015B7A8,word,3463CBE4
+// turn rate standing (6pi -> new rate)
+patch=1,EE,0015B7AC,word,3C024196
+patch=1,EE,0015B7B0,word,3442CBE4
+// steep cameras: use the stick direction directly (0.95 -> -1)
+patch=1,EE,0015B208,word,3C02BF80
+patch=1,EE,0015B20C,word,34420000
+// body facing speed (12 -> 25 rad/s)
+patch=1,EE,001B5A38,word,3C0241C8
+
+[Camera-relative directions (SH2 style)]
+author=andrewjose (made with Claude)
+description=Up on the stick always means up on the screen, even while the camera pans. On a camera cut, Henry keeps going the same way until you let go or move the stick more than 30 degrees (Silent Hill 2 rule). Uses a small routine at 0x000FC000.
+// code cave (src/cave.S)
+patch=1,EE,000FC000,word,3C190010
+patch=1,EE,000FC004,word,2739C400
+patch=1,EE,000FC008,word,AF3F0038
+patch=1,EE,000FC00C,word,8F280034
+patch=1,EE,000FC010,word,8F290078
+patch=1,EE,000FC014,word,11090005
+patch=1,EE,000FC018,word,00000000
+patch=1,EE,000FC01C,word,AF200010
+patch=1,EE,000FC020,word,AF200014
+patch=1,EE,000FC024,word,AF200018
+patch=1,EE,000FC028,word,AF290034
+patch=1,EE,000FC02C,word,3C080046
+patch=1,EE,000FC030,word,8D09A4B0
+patch=1,EE,000FC034,word,8F2A0018
+patch=1,EE,000FC038,word,8F2B000C
+patch=1,EE,000FC03C,word,2D4C0001
+patch=1,EE,000FC040,word,012B6826
+patch=1,EE,000FC044,word,000D682B
+patch=1,EE,000FC048,word,018D6025
+patch=1,EE,000FC04C,word,AF2C001C
+patch=1,EE,000FC050,word,0C056878
+patch=1,EE,000FC054,word,27240040
+patch=1,EE,000FC058,word,3C190010
+patch=1,EE,000FC05C,word,2739C400
+patch=1,EE,000FC060,word,C72C0040
+patch=1,EE,000FC064,word,C72D0048
+patch=1,EE,000FC068,word,460C6002
+patch=1,EE,000FC06C,word,460D6842
+patch=1,EE,000FC070,word,46010000
+patch=1,EE,000FC074,word,C7210074
+patch=1,EE,000FC078,word,46010036
+patch=1,EE,000FC07C,word,45010079
+patch=1,EE,000FC080,word,00000000
+patch=1,EE,000FC084,word,0C048552
+patch=1,EE,000FC088,word,00000000
+patch=1,EE,000FC08C,word,3C190010
+patch=1,EE,000FC090,word,2739C400
+patch=1,EE,000FC094,word,E7200020
+patch=1,EE,000FC098,word,0C06ABCC
+patch=1,EE,000FC09C,word,00002025
+patch=1,EE,000FC0A0,word,3C190010
+patch=1,EE,000FC0A4,word,2739C400
+patch=1,EE,000FC0A8,word,E7200024
+patch=1,EE,000FC0AC,word,0C06ABE4
+patch=1,EE,000FC0B0,word,00002025
+patch=1,EE,000FC0B4,word,3C190010
+patch=1,EE,000FC0B8,word,2739C400
+patch=1,EE,000FC0BC,word,E7200028
+patch=1,EE,000FC0C0,word,C72C0024
+patch=1,EE,000FC0C4,word,46000347
+patch=1,EE,000FC0C8,word,460C6042
+patch=1,EE,000FC0CC,word,46000082
+patch=1,EE,000FC0D0,word,46020840
+patch=1,EE,000FC0D4,word,C7220070
+patch=1,EE,000FC0D8,word,46011034
+patch=1,EE,000FC0DC,word,24080000
+patch=1,EE,000FC0E0,word,45000002
+patch=1,EE,000FC0E4,word,00000000
+patch=1,EE,000FC0E8,word,24080001
+patch=1,EE,000FC0EC,word,AF280030
+patch=1,EE,000FC0F0,word,0C048552
+patch=1,EE,000FC0F4,word,00000000
+patch=1,EE,000FC0F8,word,3C190010
+patch=1,EE,000FC0FC,word,2739C400
+patch=1,EE,000FC100,word,E720002C
+patch=1,EE,000FC104,word,8F280010
+patch=1,EE,000FC108,word,15000004
+patch=1,EE,000FC10C,word,00000000
+patch=1,EE,000FC110,word,C7200020
+patch=1,EE,000FC114,word,10000049
+patch=1,EE,000FC118,word,E7200000
+patch=1,EE,000FC11C,word,C7200020
+patch=1,EE,000FC120,word,C7230004
+patch=1,EE,000FC124,word,46030001
+patch=1,EE,000FC128,word,C7210060
+patch=1,EE,000FC12C,word,C7220064
+patch=1,EE,000FC130,word,46000834
+patch=1,EE,000FC134,word,45000002
+patch=1,EE,000FC138,word,00000000
+patch=1,EE,000FC13C,word,46020001
+patch=1,EE,000FC140,word,46000847
+patch=1,EE,000FC144,word,46010034
+patch=1,EE,000FC148,word,45000002
+patch=1,EE,000FC14C,word,00000000
+patch=1,EE,000FC150,word,46020000
+patch=1,EE,000FC154,word,46000005
+patch=1,EE,000FC158,word,C7210068
+patch=1,EE,000FC15C,word,46000834
+patch=1,EE,000FC160,word,4501000C
+patch=1,EE,000FC164,word,00000000
+patch=1,EE,000FC168,word,8F28001C
+patch=1,EE,000FC16C,word,8F290018
+patch=1,EE,000FC170,word,01094024
+patch=1,EE,000FC174,word,15000007
+patch=1,EE,000FC178,word,00000000
+patch=1,EE,000FC17C,word,8F280014
+patch=1,EE,000FC180,word,15000012
+patch=1,EE,000FC184,word,00000000
+patch=1,EE,000FC188,word,C7200020
+patch=1,EE,000FC18C,word,1000000F
+patch=1,EE,000FC190,word,E7200000
+patch=1,EE,000FC194,word,8F280030
+patch=1,EE,000FC198,word,11000009
+patch=1,EE,000FC19C,word,00000000
+patch=1,EE,000FC1A0,word,8F290014
+patch=1,EE,000FC1A4,word,15200009
+patch=1,EE,000FC1A8,word,00000000
+patch=1,EE,000FC1AC,word,24090001
+patch=1,EE,000FC1B0,word,AF290014
+patch=1,EE,000FC1B4,word,C720002C
+patch=1,EE,000FC1B8,word,10000004
+patch=1,EE,000FC1BC,word,E7200008
+patch=1,EE,000FC1C0,word,AF200014
+patch=1,EE,000FC1C4,word,C7200020
+patch=1,EE,000FC1C8,word,E7200000
+patch=1,EE,000FC1CC,word,8F280014
+patch=1,EE,000FC1D0,word,1100001A
+patch=1,EE,000FC1D4,word,00000000
+patch=1,EE,000FC1D8,word,8F290030
+patch=1,EE,000FC1DC,word,11200014
+patch=1,EE,000FC1E0,word,00000000
+patch=1,EE,000FC1E4,word,C720002C
+patch=1,EE,000FC1E8,word,C7230008
+patch=1,EE,000FC1EC,word,46030001
+patch=1,EE,000FC1F0,word,C7210060
+patch=1,EE,000FC1F4,word,C7220064
+patch=1,EE,000FC1F8,word,46000834
+patch=1,EE,000FC1FC,word,45000002
+patch=1,EE,000FC200,word,00000000
+patch=1,EE,000FC204,word,46020001
+patch=1,EE,000FC208,word,46000847
+patch=1,EE,000FC20C,word,46010034
+patch=1,EE,000FC210,word,45000002
+patch=1,EE,000FC214,word,00000000
+patch=1,EE,000FC218,word,46020000
+patch=1,EE,000FC21C,word,46000005
+patch=1,EE,000FC220,word,C721006C
+patch=1,EE,000FC224,word,46000834
+patch=1,EE,000FC228,word,45000004
+patch=1,EE,000FC22C,word,00000000
+patch=1,EE,000FC230,word,AF200014
+patch=1,EE,000FC234,word,C7200020
+patch=1,EE,000FC238,word,E7200000
+patch=1,EE,000FC23C,word,C7200020
+patch=1,EE,000FC240,word,E7200004
+patch=1,EE,000FC244,word,24080001
+patch=1,EE,000FC248,word,AF280010
+patch=1,EE,000FC24C,word,8F290000
+patch=1,EE,000FC250,word,3C080046
+patch=1,EE,000FC254,word,AD09A4B0
+patch=1,EE,000FC258,word,AF29000C
+patch=1,EE,000FC25C,word,24080001
+patch=1,EE,000FC260,word,AF280018
+patch=1,EE,000FC264,word,3C190010
+patch=1,EE,000FC268,word,2739C400
+patch=1,EE,000FC26C,word,8F3F0038
+patch=1,EE,000FC270,word,08056A9C
+patch=1,EE,000FC274,word,00000000
+// cave constants
+patch=1,EE,000FC460,word,40490FDB
+patch=1,EE,000FC464,word,40C90FDB
+patch=1,EE,000FC468,word,3EB2B8C2
+patch=1,EE,000FC46C,word,3F060A92
+patch=1,EE,000FC470,word,3C23D70A
+patch=1,EE,000FC474,word,322BCC77
+patch=1,EE,000FC478,word,53483244
+// player update: call the cave instead of the builder
+patch=1,EE,001B53C0,word,0C03F000

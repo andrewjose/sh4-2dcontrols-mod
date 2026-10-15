@@ -1,0 +1,15 @@
+# game files: never commit these
+*.exe
+*.iso
+*.elf
+SLUS_*
+SILENT_HILL_4*
+sh4_image.bin
+*.bin
+
+# build output (published on the Releases page instead)
+*.dll
+*.lib
+*.o
+pc/test/harness
+__pycache__/

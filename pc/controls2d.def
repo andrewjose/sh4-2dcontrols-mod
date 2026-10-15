@@ -1,0 +1,5 @@
+LIBRARY Controls2D.dll
+EXPORTS
+    LoadPlugin = LoadPlugin@4
+    Update = Update@0
+    UnloadPlugin = UnloadPlugin@0
