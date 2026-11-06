@@ -18,6 +18,37 @@ Enable or disable each one in PCSX2:
 
 **PCSX2 1.6:** put the file in the `cheats` folder as `3919136D.pnach` and turn on "Enable Cheats". 1.6 applies every section in the file, so delete the sections you don't want, and keep only one of the two Snap turning sections.
 
+## Building it into your ISO instead
+
+[`src/patch_iso.py`](src/patch_iso.py) writes the mod into the game's executable on your own ISO. The patched copy then works without patches, on a real PS2 (e.g. through OPL) or in any emulator. It needs Python 3, no extra packages, and the pnach next to it, which is where it reads the patches from:
+
+```
+python3 src/patch_iso.py "Silent Hill 4.iso"
+```
+
+This writes `Silent Hill 4 (Controls2D).iso` and leaves the original alone.
+
+- `--turn fast` uses the 1080 deg/s turning instead of instant, and `--turn off` leaves turning out.
+- `--no-camera` leaves out camera-relative directions.
+- `--in-place` patches the file itself instead of making a copy; back up first.
+- It also accepts an extracted `SLUS_208.73` instead of an ISO.
+- It only accepts the original, unmodified game executable (CRC `3919136D`), so it can't double-patch or hit the wrong version.
+
+What it changes:
+
+- **Inside the disc:** only the executable `SLUS_208.73`. Its size and position on the disc stay the same, so nothing else moves.
+- **Turning:** the same nine instructions as the pnach.
+- **Camera routine:** the executable gets a fourth load segment, so the PS2 itself loads the routine to `0x000FC000` at boot. The segment's bytes take the place of the file's tail, which held only data no loader reads: a compiler comment, `.reginfo`, section names and the section header table. The section table is dropped, which is valid for an executable since loaders use program headers.
+
+The patched executable has a new CRC, which the script prints:
+
+- **This mod's pnach:** keyed to the original CRC, so it won't load on the patched copy. Leave it off there.
+- **PCSX2's built-in widescreen patch:** also keyed to the original CRC. To keep using it, copy it into your `patches` folder under the new CRC's name.
+
+Don't share patched ISOs. Share the script; everyone runs it on their own copy.
+
+Tested by running the patched executable's code in the PS2 interpreter with no pnach applied (same turning and camera behaviour as the pnach), and by patching a test ISO and checking that every changed byte lies inside the executable. Not yet run on real hardware. Booting it in PCSX2 with **Fast Boot off** exercises the PS2's own disc loader, which is what loads the extra segment.
+
 ## How it works
 
 - **Snap turning** edits nine instructions in place. On PS2 the steering constants are built inside the instructions (`lui`/`ori` pairs at `0x15B794`–`0x15B7B0`, `0x15B208` and `0x1B5A38`).
@@ -42,8 +73,9 @@ python3 src/make_pnach.py --elf path/to/SLUS_208.73
 The tests run SH4's real input builder from your `SLUS_208.73` in a small Emotion Engine interpreter ([`test/ee.py`](test/ee.py)), with the pad, camera and atan2 functions stubbed:
 
 ```
-pip install rabbitizer
+pip install rabbitizer pycdlib
 python3 test/test_ps2.py path/to/SLUS_208.73
+python3 test/test_iso.py path/to/SLUS_208.73     # the ISO patcher
 ```
 
 They cover the following:
