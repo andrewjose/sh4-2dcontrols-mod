@@ -16,7 +16,7 @@ Ready-to-use files are on the [Releases](../../releases) page.
 
 **PC:** install Zealot's Camera Mod v1.2, then copy `Controls2D.dll` and `Controls2D.ini` into `<SH4 folder>\plugins\`. F3 toggles between Controls2D and SH4's original controls. Leave the camera mod's "Tank Controls" option off. More detail is in [pc/README.md](pc/README.md).
 
-**PS2 / PCSX2:** copy `SLUS-20873_3919136D.pnach` into PCSX2's `patches` folder, then right-click the game, open Properties → Patches and tick the patches you want. More detail is in [ps2/README.md](ps2/README.md).
+**PS2 / PCSX2:** copy `SLUS-20873_3919136D.pnach` into PCSX2's `patches` folder, then right-click the game, open Properties → Patches and tick the patches you want. To build the mod into your own ISO instead (for a real PS2 or emulators without pnach support), run `python3 ps2/src/patch_iso.py "Silent Hill 4.iso"`. More detail is in [ps2/README.md](ps2/README.md).
 
 ## How it was made
 
