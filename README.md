@@ -18,6 +18,12 @@ Ready-to-use files are on the [Releases](../../releases) page.
 
 **PS2 / PCSX2:** copy `SLUS-20873_3919136D.pnach` into PCSX2's `patches` folder, then right-click the game, open Properties → Patches and tick the patches you want. To build the mod into your own ISO instead (for a real PS2 or emulators without pnach support), run `python3 ps2/src/patch_iso.py "Silent Hill 4.iso"`. More detail is in [ps2/README.md](ps2/README.md).
 
+## Documentation
+
+- [docs/1-overview.md](docs/1-overview.md): what the mod changes and why, for players
+- [docs/2-engineering.md](docs/2-engineering.md): how it works, for software engineers new to game modding
+- [docs/3-technical.md](docs/3-technical.md): addresses, patch tables, the code cave, the ELF hard-patch and test coverage, for reverse engineers
+
 ## How it was made
 
 Everything here comes from reverse-engineering the game executables: SH4's input code on PC and PS2, and Silent Hill 2's 2D control logic for reference. Each version also has tests that run the game's own input code from your copy of the game (natively on PC, and in a small PS2 CPU interpreter for the PS2 version) to check the behaviour frame by frame.

@@ -51,14 +51,9 @@ Tested by running the patched executable's code in the PS2 interpreter with no p
 
 ## How it works
 
-- **Snap turning** edits nine instructions in place. On PS2 the steering constants are built inside the instructions (`lui`/`ori` pairs at `0x15B794`–`0x15B7B0`, `0x15B208` and `0x1B5A38`).
-- **Camera-relative directions** redirects the player update's call to the input builder (`0x1B53C0`) to a small routine at `0x000FC000`, with its data at `0x000FC400` ([`src/cave.S`](src/cave.S)). Each frame the routine:
-  1. reads the camera direction (`0x15A1E0`), the left stick (`0x1AAF30`/`0x1AAF90`) and atan2 (`0x121548`);
-  2. applies SH2's rule;
-  3. writes the result to the camera yaw the builder uses (`0x45A4B0`);
-  4. jumps to the builder.
+In short: snap turning rewrites nine instructions that build the steering constants. Camera-relative directions redirect the player update's call to the input builder through a small MIPS routine in RAM the game never uses (`0x000FC000`). Each frame, that routine recomputes the camera yaw with Silent Hill 2's rule.
 
-The game never uses memory between `0x80000` and `0xFFFFF`: it loads at `0x100000` and its stack sits at the top of RAM.
+Explanations: [docs/2-engineering.md](../docs/2-engineering.md) (concepts) and [docs/3-technical.md](../docs/3-technical.md) (patch table, cave layout, register discipline, the ELF segment trick).
 
 ## Building and tests
 

@@ -29,21 +29,11 @@ Leave the camera mod's "Tank Controls" option off, since the two would fight. Co
 
 The log (`plugins\Controls2D.log`) records the code checks, camera cuts, scene re-initialisations and toggles.
 
-## How SH4 works (from the exe)
+## How it works
 
-**Directions.** SH4's movement is already screen-relative under the hood. The input builder (`0x52F260`) computes *walk direction = stick angle + camera yaw*, with a turn-around when the new direction is more than 135 degrees off (`0x537B80`), which is the same scheme as SH2. The difference is the camera yaw (`0x10A1918`): SH4 only samples it when the player controller initialises for a scene, so within a scene it never follows the camera, and when it is re-sampled the stick's meaning changes instantly.
+In short: the plugin hooks the game's only call to its input builder and recomputes, every frame, the camera yaw that SH4 otherwise samples only at scene start. It applies Silent Hill 2's rule on camera cuts and points six steering-constant operands at its own values for snap turning. It checks every byte it touches first, and F3 or unloading puts them back.
 
-**SH2's rule** (`sh2pc.exe`, function `0x547FA0`). Camera yaw is recomputed every frame. On a camera change it keeps the previous camera's yaw while the stick is held, and switches once the stick is released or moves more than 30 degrees.
-
-**Turning.** SH4 doesn't point Henry at the stick direction. It steers his walking direction toward it (`0x52FCDB`) at *6π − speed × (4π + run × π)* radians per second: 1080 deg/s standing, 360 deg/s walking and 180 deg/s running. While a turn is in progress it also holds his run at 60%. When the camera looks down steeply, a second stage (`0x52F90D`) limits the turn per frame as well. His body then turns to face the walking direction at 12 rad/s.
-
-## What the plugin changes
-
-- **Directions:** the call to the input builder at `0x534B2E` is redirected through a small stub. The stub applies SH2's rule, writes the result to `0x10A1918`, and continues into the game's own builder.
-- **Turning:** six float operands in the steering code are pointed at the plugin's own values: the turn-rate terms, the steep-camera threshold, and the body-facing speed. F3 and unloading put them back.
-- **Safety:** before patching, it checks the bytes of every game function it touches and refuses, logging why, on any mismatch.
-
-Everything else (speed, running, turn-arounds, the quick-turn button, the scripted stick inversion) is still SH4's own code.
+Explanations: [docs/2-engineering.md](../docs/2-engineering.md) (concepts) and [docs/3-technical.md](../docs/3-technical.md) (addresses, operand table, per-frame logic).
 
 ## Building and tests
 
