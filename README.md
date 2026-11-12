@@ -12,7 +12,11 @@ Silent Hill 2/3-style "2D" controls for **Silent Hill 4: The Room**, keeping the
 
 Ready-to-use files are on the [Releases](../../releases) page.
 
-## Quick install
+> **Help wanted: playtesting.** This needs more people playing it. If you find a bug, crash or anything that looks wrong, please [open an issue on GitHub](https://github.com/andrewjose/sh4-2dcontrols-mod/issues) and include which version (PC or PS2, pnach or patched ISO), which patches you turned on, and where in the game it happened (room and camera angle).
+
+## How to install and use
+
+Download the zip for your version from [Releases](../../releases).
 
 **PC:** install Zealot's Camera Mod v1.2, then copy `Controls2D.dll` and `Controls2D.ini` into `<SH4 folder>\plugins\`. F3 toggles between Controls2D and SH4's original controls. Leave the camera mod's "Tank Controls" option off. More detail is in [pc/README.md](pc/README.md).
 
